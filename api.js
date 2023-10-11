@@ -6,7 +6,8 @@ module.exports = function (config) {
         endpoint: config.api.endpoint,
         appKey: config.api.key,
         appSecret: config.api.secret,
-        consumerKey: config.api.consumerKey
+        consumerKey: config.api.consumerKey,
+        debug: config.api.debug,
     });
 
     var listZones = function listZones(callback) {

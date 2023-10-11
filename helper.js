@@ -15,6 +15,10 @@ module.exports = {
         if (process.env.OVH_DNS_CONSUMER_KEY) {
             program.consumerKey = process.env.OVH_DNS_CONSUMER_KEY;
         }
+        
+        if (process.env.OVH_DNS_DEBUG) {
+            program.debug = true;
+        }
 
         if (!program.applicationKey || !validator.isAlphanumeric(program.applicationKey)) {
             console.error("Application Key is missing or not a valid String [Client Side Invalid]");
@@ -38,7 +42,8 @@ module.exports = {
                 key: program.applicationKey,
                 secret: program.applicationSecret,
                 endpoint: program.endpoint,
-                consumerKey: program.consumerKey
+                consumerKey: program.consumerKey,
+                debug: program.debug,
             }
         }
     }
