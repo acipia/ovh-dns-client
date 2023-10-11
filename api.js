@@ -42,8 +42,8 @@ module.exports = function (config) {
             if (!_.includes(zones, zone)) {
                 return callback('Zone "' + zone + '" not found.', null);
             }
-            if (!_.includes(['A', 'AAAA', 'CNAME', 'MX', 'TXT'], fieldType)) {
-                return callback('Invalid FieldType, only "A","AAAA","CNAME","MX" and "TXT" are valid.', null)
+            if (!_.includes(['A', 'AAAA', 'CNAME', 'MX', 'TXT', 'NS', 'DMARC', 'DKIM', 'SRV'], fieldType)) {
+                return callback('Invalid FieldType, only "A","AAAA","CNAME","MX", "DKIM", "SRV", "DMARC", "NS" and "TXT" are valid.', null)
             }
             ovh.request('POST', '/domain/zone/' + zone + '/record/', {
                 fieldType: fieldType,
