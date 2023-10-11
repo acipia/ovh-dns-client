@@ -40,7 +40,7 @@ if (program.args.length !== 1) {
                 console.log(records);
             }
         } else {
-            console.error(err);
+            console.error(err, records);
         }
     });
 }

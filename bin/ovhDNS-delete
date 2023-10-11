@@ -32,7 +32,7 @@ if (program.args.length !== 4) {
         program.args[3]
         , function (err, record) {
             if (err) {
-                console.error(err);
+                console.error(err, record);
             } else {
                 console.log('Record Deleted');
             }
