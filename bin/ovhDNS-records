@@ -15,19 +15,26 @@ program
     .option('-K, --applicationKey [key]', 'The Application Key provided by OVH')
     .option('-S, --applicationSecret [secret]', 'The Application Secret Key provided by OVH')
     .option('-C, --consumerKey [consumerKey]', 'The Consumer-Key provided by OVH')
-    .option('-t, --table', 'Show the Result as Table')
+    .option('-t, --table', 'Show the Result as Table (default)')
+    .option('-j, --json', 'Show the Result as JSON')
     .parse(process.argv);
 
 var config = helper.inputValidateAndSetConfig(program);
 
 var api = require('../api')(config);
 
-if (program.args.length !== 1) {
+if (program.args.length < 1) {
     console.log("Not enough arguments, 'zone' is required")
 } else {
-    api.listRecords(program.args[0], function (err, records) {
+    if (program.args.length == 2) {
+        fieldType = program.args[1].toUpperCase() ;
+    } else {
+        fieldType = null ;
+    }
+
+    api.listRecords(program.args[0], fieldType, function (err, records) {
         if (!err) {
-            if (program.table) {
+            if (!program.json) {
                 var table = new Table({
                     head: ['ID', 'Zone', 'SubDomain', 'FieldType', 'Target']
                 });
