@@ -25,7 +25,10 @@ WORKDIR /home/${USERNAME}
 
 RUN mkdir -p /home/${USERNAME}/ovh-dns-client
 COPY . /home/${USERNAME}/ovh-dns-client
-RUN cd /home/${USERNAME}/ovh-dns-client && npm install
+
+RUN cd /home/${USERNAME}/ovh-dns-client && \
+    rm -rf ./node_modules ./package-lock.json && \
+    npm install
 
 RUN echo 'ovhDNS help\n\
 ovhDNS records myzone.net -t\n\
