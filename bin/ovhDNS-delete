@@ -9,7 +9,7 @@ var helper = require('../helper');
 program
 
     .description('Use "https://goo.gl/BCSXMH" to get the ApplicationKey, ApplicationSecret and ConsumerKey')
-    .usage('[zone] [subdomain] [fieldType] [target] to delete a record with the given credentials')
+    .usage('[zone] [subdomain] [fieldType] [target] to delete a record with the given credentials\n or by ID [zone] [ID]')
     //.description('Use "https://api.ovh.com/createToken/?GET=/domain/zone/*&POST=/domain/zone/*&PUT=/domain/zone/*&DELETE=/domain/zone/*" to get the ApplicationKey, ApplicationSecret and ConsumerKey')
     .option('-E, --endpoint [endpoint]', 'API Endpoint (Possible Endpoints : "ovh-eu","ovh-ca" Default is "ovh-eu"', 'ovh-eu')
     .option('-K, --applicationKey [key]', 'The Application Key provided by OVH')
@@ -21,8 +21,22 @@ var config = helper.inputValidateAndSetConfig(program);
 
 var api = require('../api')(config);
 
-if (program.args.length !== 4) {
+if (program.args.length == 2) {
+
+    api.deleteRecord(
+        program.args[0],
+        program.args[1],
+        function (err, record) {
+            if (err) {
+                console.error(err, record);
+            } else {
+                console.log('Record Deleted');
+            }
+        });
+
+} else if (program.args.length !== 4) {
     console.log("Not enough arguments 'zone','subdomain','fieldType','target' are required")
+    console.log("or 'zone','ID' are required")
 } else {
 
     api.deleteRecordByContent(

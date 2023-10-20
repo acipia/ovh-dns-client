@@ -54,13 +54,15 @@ module.exports = function (config) {
         });
     };
 
-    var deleteRecord = function deleteRecord(zone, id,callback) {
+    var deleteRecord = function deleteRecord(zone, id, callback) {
+        if (!Number.isInteger(Number(id))) {
+            return callback('ID "' + id + '" is not a number.', null);
+        }
         listZones(function (err, zones) {
             if (!_.includes(zones, zone)) {
                 return callback('Zone "' + zone + '" not found.', null);
             }
-            ovh.request('DELETE', '/domain/zone/' + zone + '/record/'+id, callback);
-
+            ovh.request('DELETE', '/domain/zone/' + zone + '/record/'+Number(id), callback);
         });
     };
 
@@ -96,6 +98,7 @@ module.exports = function (config) {
         getRecord: getRecord,
         listRecords: listRecords,
         createRecord: createRecord,
+        deleteRecord: deleteRecord,
         deleteRecordByContent: deleteRecordByContent,
         refreshZone: refreshZone
     }
