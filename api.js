@@ -22,12 +22,15 @@ module.exports = function (config) {
         });
     };
 
-    var listRecords = function listRecords(zone, callback) {
+    var listRecords = function listRecords(zone, fieldType = null, callback) {
         listZones(function (err, zones) {
             if (!_.includes(zones, zone)) {
                 return callback('Zone "' + zone + '" not found.', null);
             }
-            ovh.request('GET', '/domain/zone/' + zone + '/record/', function (err, recordIds) {
+            if (!_.includes([null, 'A', 'AAAA', 'CNAME', 'MX', 'TXT', 'NS', 'DMARC', 'DKIM', 'SRV', 'SPF'], fieldType)) {
+                return callback('Invalid FieldType, only "A","AAAA","CNAME","MX", "DKIM", "SRV", "SPF", "DMARC", "NS" and "TXT" are valid.', "provided: "+ fieldType)
+            }
+            ovh.request('GET', '/domain/zone/' + zone + '/record/', { fieldType: fieldType }, function (err, recordIds) {
                 async.map(recordIds, function (recordId, cb) {
                     getRecord(zone, recordId, cb);
                 }, callback);
