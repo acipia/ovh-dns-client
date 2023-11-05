@@ -8,7 +8,8 @@ var helper = require('../helper');
 
 program
     .version(appPackage.name + ' ' + appPackage.version + ' by ' + appPackage.author)
-    //.command('zones', 'Lists DNS-Zones you can manage')
+    .command('zones', 'Lists DNS-Zones you can manage')
+    .command('refresh [zone]', 'Refresh zone')
     .command('records [zone]', 'List all records')
     .command('records [zone] [fieldType]', 'List all records by type')
     .command('create [zone] [subdomain] [fieldType] [target]', 'Create a new DNS Record')
