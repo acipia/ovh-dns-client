@@ -36,4 +36,4 @@ ovhDNS delete myzone.net dummy A 1.2.3.4' > ${HOME}/.bash_history
 
 ENV PATH="${PATH}:/home/${USERNAME}/ovh-dns-client/bin"
 
-CMD ovhDNS
+CMD ["ovhDNS"]
