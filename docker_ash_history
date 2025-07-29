@@ -1,0 +1,4 @@
+# some sample commands in container ash history
+ovhDNS help
+ovhDNS records myzone.net -t
+ovhDNS delete myzone.net dummy A 1.2.3.4

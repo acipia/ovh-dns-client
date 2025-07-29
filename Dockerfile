@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.7-labs
+# to be able to use "COPY --parents" syntax
 
 # small node container with ovh-dns-client cli tool
 # allow to list, add, delete records in OVH managed zone through API
@@ -11,37 +13,33 @@
 # build : docker build -t ovh-dns-client .
 #
 # run interactively :
-# docker run -ti --rm --env-file ovh-envfile.ini ovh-dns-client /bin/bash
+# docker run -ti --rm --env-file ovh-envfile.ini ovh-dns-client /bin/ash
 #
 # run oneshot:
-# docker run -ti --rm --env-file ovh-envfile.ini ovh-dns-client ovh-dns-client ovhDNS records mydomain.io -t
+# docker run --read-only -ti --rm --env-file ovh-envfile.ini ovh-dns-client ovhDNS records mydomain.io -t
 
 # FROM node:20-alpine
-FROM node:22-alpine
+# FROM node:22-alpine
+FROM node:24-alpine
 
 ARG USERNAME="node"
 
 USER ${USERNAME}
+ENV HOME=/home/${USERNAME}
 WORKDIR /home/${USERNAME}
 
 RUN mkdir -p /home/${USERNAME}/ovh-dns-client
-COPY ["package.json", "/home/${USERNAME}/ovh-dns-client/package.json"]
+COPY ["package.json", "${HOME}/ovh-dns-client/package.json"]
 
 RUN cd /home/${USERNAME}/ovh-dns-client && \
-    rm -rf ./node_modules ./package-lock.json && \
     npm set progress=false && \
     npm config set depth 0 && \
     npm install --omit=dev && \
     npm cache clean --force
 
+COPY --parents *.js bin "/home/${USERNAME}/ovh-dns-client/"
+COPY docker_ash_history ${HOME}/.ash_history
 
-COPY ["bin", "/home/${USERNAME}/ovh-dns-client/bin"]
-COPY ["*.js", "/home/${USERNAME}/ovh-dns-client/"]
-
-RUN echo $'ovhDNS help\n\
-ovhDNS records myzone.net -t\n\
-ovhDNS delete myzone.net dummy A 1.2.3.4' > ${HOME}/.ash_history
-
-ENV PATH="${PATH}:/home/${USERNAME}/ovh-dns-client/bin"
+ENV PATH="${PATH}:${HOME}/ovh-dns-client/bin"
 
 CMD ["ovhDNS"]
